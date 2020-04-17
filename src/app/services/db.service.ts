@@ -56,18 +56,25 @@ export class DbService {
   }
 
   getUsers() {
-    return this.storage.executeSql('SELECT * FROM usertable ORDER BY apellido', []).then(res => {
+    return this.storage.executeSql('SELECT * FROM usertable', []).then(res => {
       const items: User[] = [];
       if (res.rows.length > 0) {
         for (var i = 0; i < res.rows.length; i++) {
           items.push({
+            // id: res.rows.item(i).id,
+            // nombre: res.rows.item(i).user_nombre,
+            // apellido: res.rows.item(i).user_apellido,
+            // telefono: res.rows.item(i).user_telefono,
+            // correo: res.rows.item(i).user_correo,
+            // fecha_nacimiento: res.rows.item(i).user_fecha_nacimiento,
+            // genero: res.rows.item(i).user_genero,
             id: res.rows.item(i).id,
-            nombre: res.rows.item(i).user_nombre,
-            apellido: res.rows.item(i).user_apellido,
-            telefono: res.rows.item(i).user_telefono,
-            correo: res.rows.item(i).user_correo,
-            fecha_nacimiento: res.rows.item(i).user_fecha_nacimiento,
-            genero: res.rows.item(i).user_genero,
+            nombre: res.rows.item(i).nombre,
+            apellido: res.rows.item(i).apellido,
+            telefono: res.rows.item(i).telefono,
+            correo: res.rows.item(i).correo,
+            fecha_nacimiento: res.rows.item(i).fecha_nacimiento,
+            genero: res.rows.item(i).genero,
           });
         }
       }
@@ -76,25 +83,34 @@ export class DbService {
   }
 
   // tslint:disable-next-line: variable-name
-  addUser(user_nombre, user_apellido, user_telefono, user_correo, user_fecha_nacimiento, user_genero) {
-    const data = [user_nombre, user_apellido, user_telefono, user_correo, user_fecha_nacimiento, user_genero];
+  // addUser(user_nombre, user_apellido, user_telefono, user_correo, user_fecha_nacimiento, user_genero) {
+  //   const data = [user_nombre, user_apellido, user_telefono, user_correo, user_fecha_nacimiento, user_genero];
+  addUser(nombre, apellido, telefono, correo, fecha_nacimiento, genero) {
+    const data = [nombre, apellido, telefono, correo, fecha_nacimiento, genero];
     // tslint:disable-next-line: max-line-length
-    return this.storage.executeSql('INSERT INTO usertable (user_nombre, user_apellido, user_telefono, user_correo, user_fecha_nacimiento, user_genero) VALUES (?, ?, ?, ?, ?, ?)', data)
-      .then(res => {
-        this.getUsers();
-      });
+    return this.storage.executeSql('INSERT INTO usertable (nombre, apellido, telefono, correo, fecha_nacimiento, genero) VALUES (?, ?, ?, ?, ?, ?)', data)
+    .then(res => {
+      this.getUsers();
+    });
   }
 
   getUser(id): Promise<User> {
     return this.storage.executeSql('SELECT * FROM usertable WHERE id = ?', [id]).then(res => {
       return {
+        // id: res.rows.item(0).id,
+        // nombre: res.rows.item(0).user_nombre,
+        // apellido: res.rows.item(0).user_apellido,
+        // telefono: res.rows.item(0).user_telefono,
+        // correo: res.rows.item(0).user_correo,
+        // fecha_nacimiento: res.rows.item(0).user_fecha_nacimiento,
+        // genero: res.rows.item(0).user_genero,
         id: res.rows.item(0).id,
-        nombre: res.rows.item(0).user_nombre,
-        apellido: res.rows.item(0).user_apellido,
-        telefono: res.rows.item(0).user_telefono,
-        correo: res.rows.item(0).user_correo,
-        fecha_nacimiento: res.rows.item(0).user_fecha_nacimiento,
-        genero: res.rows.item(0).user_genero,
+        nombre: res.rows.item(0).nombre,
+        apellido: res.rows.item(0).apellido,
+        telefono: res.rows.item(0).telefono,
+        correo: res.rows.item(0).correo,
+        fecha_nacimiento: res.rows.item(0).fecha_nacimiento,
+        genero: res.rows.item(0).genero,
       };
     });
   }
@@ -102,7 +118,7 @@ export class DbService {
   updateUser(id, user: User) {
     let data = [user.nombre, user.apellido, user.telefono, user.correo, user.fecha_nacimiento, user.genero];
     // tslint:disable-next-line: max-line-length
-    return this.storage.executeSql(`UPDATE usertable SET user_nombre = ?, user_apellido = ?, user_telefono = ?, user_correo = ?, user_fecha_nacimiento = ?, user_genero = ?  WHERE id = ${id}`, data)
+    return this.storage.executeSql(`UPDATE usertable SET nombre = ?, apellido = ?, telefono = ?, correo = ?, fecha_nacimiento = ?, genero = ?  WHERE id = ${id}`, data)
       .then(data => {
         this.getUsers();
       })
@@ -110,8 +126,8 @@ export class DbService {
 
   deleteUser(id) {
     return this.storage.executeSql('DELETE FROM usertable WHERE id = ?', [id])
-      .then(_ => {
-        this.getUsers();
-      });
+    .then(_ => {
+      this.getUsers();
+    });
   }
 }

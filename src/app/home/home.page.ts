@@ -26,6 +26,7 @@ export class HomePage implements OnInit {
       if (res) {
         this.db.fetchUsers().subscribe(item => {
           this.Data = item;
+          console.log(this.Data)
         });
       }
     });
